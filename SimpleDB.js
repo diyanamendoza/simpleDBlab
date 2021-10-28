@@ -1,5 +1,5 @@
 //imports
-const { writeFile, readFile } = require('fs/promises');
+const { writeFile, readFile, readdir } = require('fs/promises');
 const path = require('path');
 const shortid = require('shortid');
 
@@ -10,7 +10,7 @@ class SimpleDB {
     this.rootDir = rootDir;
   }
 
-  //save 
+  //save one file
   save(file) {
     const id = shortid.generate();
     file.id = id; 
@@ -21,7 +21,21 @@ class SimpleDB {
     return writeFile(this.filePath, this.stringyFile);
   }
 
+  //save array of file objects
+  async saveMany(files) {
+    await Promise.all(
+      files.map((file) => {
+        const id = shortid.generate();
+        file.id = id; 
+        const fileName = `${id}.json`;
+        this.filePath = path.join(this.rootDir, fileName);
+        this.stringyFile = JSON.stringify(file);
+    
+        return writeFile(this.filePath, this.stringyFile);
+      }));
+  }
 
+  //get by id
   async get(id) {
     try {
       this.filePath = path.join(this.rootDir, `${id}.json`);
@@ -37,12 +51,22 @@ class SimpleDB {
     }
   }
 
-
   //get all as array w promise.all
-
-  //   getAll() {
-
-  //   }
+  async getAll() {
+    const contentsArray = await readdir(this.rootDir);
+    const parsedContents = await Promise.all(
+      contentsArray.map((file) => 
+        readFile(`${this.rootDir}/${file}`, 'utf-8')
+          .then((fileContents) => JSON.parse(fileContents))
+          .catch((err) => {
+            if (err.code === 'ENOENT') {
+              return null;
+            }
+            throw err;
+          })
+      ));
+    return parsedContents;
+  }
 
 }
 

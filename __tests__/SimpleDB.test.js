@@ -42,7 +42,26 @@ describe('SimpleDB', () => {
       .get('fakeid')
       .then((result) => expect(result).toEqual(null));
   });
-  //get all test
+
+
+  //get from savemany
+  it('should return an array of all files (parsed) that were saved in the directory', () => {
+    const db4 = new SimpleDB(rootDir);
+    const filesArray = [
+      { name: 'gloria', role: 'grandma' },
+      { name: 'portia', role: 'aunt' }
+    ];
+
+    const expectation = [
+      { name: 'gloria', role: 'grandma', id: expect.any(String) },
+      { name: 'portia', role: 'aunt', id: expect.any(String) }
+    ];
+
+    return db4
+      .saveMany(filesArray)
+      .then(() => db4.getAll())
+      .then((received) => expect(received).toEqual(expect.arrayContaining(expectation)));
+  });
 
   //delete test
 
