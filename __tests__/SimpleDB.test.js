@@ -1,5 +1,5 @@
 //imports 
-const { mkdir, rm } = require('fs/promises');
+const { mkdir, rm, readdir } = require('fs/promises');
 const SimpleDB = require('../SimpleDB.js');
 
 describe('SimpleDB', () => {
@@ -13,23 +13,20 @@ describe('SimpleDB', () => {
   }
 
   );
-  //id test
-  it('should give the saved object an id', () => {
+  //save test
+  it('should save a file in rootDir', () => {
     const db1 = new SimpleDB(rootDir);
     const fileBefore = {
       name: 'gloria',
       role: 'grandma'
     };
-    const fileAfter = {
-      id: expect.any(Number),
-      name: 'gloria',
-      role: 'grandma'
-    };
+
+    const dirContents = readdir(rootDir);
+
 
     return db1
       .save(fileBefore)
-      .then((savedFile) => JSON.parse(savedFile))
-      .then((parsedSavedFile) => expect(parsedSavedFile).toEqual(fileAfter));
+      .then(() => expect(dirContents).toBeTruthy());
   });
   //save and get test
 
