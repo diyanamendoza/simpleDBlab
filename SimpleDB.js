@@ -1,5 +1,5 @@
 //imports
-const { writeFile, readFile, readdir } = require('fs/promises');
+const { writeFile, readFile, readdir, rm, unlink } = require('fs/promises');
 const path = require('path');
 const shortid = require('shortid');
 
@@ -66,6 +66,24 @@ class SimpleDB {
           })
       ));
     return parsedContents;
+  }
+
+  //   delete by id
+  async removeFile(id) {
+    try {
+      this.filePath = path.join(this.rootDir, `${id}.json`);
+      await unlink(this.filePath);
+      console.log(`${this.filePath} was deleted`);
+    }
+    catch (err) {
+      if (err) console.log(err);
+    }
+  }
+
+  // second version of delete by id
+  async rmFile(id) {
+    this.filePath = path.join(this.rootDir, `${id}.json`);
+    return rm(this.filePath, { force: true });
   }
 
 }

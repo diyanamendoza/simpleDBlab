@@ -1,4 +1,5 @@
 //imports 
+const { readdir } = require('fs');
 const { mkdir, rm } = require('fs/promises');
 const SimpleDB = require('../SimpleDB.js');
 
@@ -64,6 +65,20 @@ describe('SimpleDB', () => {
   });
 
   //delete test
+//   it('should take a file by id and delete it', () => {
+//     const db5 = new SimpleDB(rootDir);
+//     const aFile = {
+//       name: 'big sur',
+//       role: 'uncle'
+//     };
+
+//     return db5
+//       .save(aFile)
+//       .then(() => db5.rmFile(aFile.id))
+//       .then(() => readdir(rootDir))
+//       .then((contents) => expect(contents).toBeUndefined());
+
+//   });
 
   //update test
 
