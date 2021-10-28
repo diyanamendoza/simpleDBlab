@@ -22,9 +22,10 @@ class SimpleDB {
     return writeFile(this.filePath, this.stringyFile);
   }
   //get based on id - return null if !file
-  get(id) {
+  async get(id) {
     this.filePath = path.join(this.rootDir, `${id}.json`);
-    const parsedFile = JSON.parse(readFile(this.filePath));
+    const file = await readFile(this.filePath, 'utf-8');
+    const parsedFile = JSON.parse(file);
     return parsedFile; 
   }
   //get all as array w promise.all

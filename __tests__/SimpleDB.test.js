@@ -1,10 +1,11 @@
 //imports 
-const { mkdir, rm, readdir } = require('fs/promises');
+const { mkdir, rm } = require('fs/promises');
+// const { get } = require('http');
 const SimpleDB = require('../SimpleDB.js');
 
 describe('SimpleDB', () => {
   //any constants relevant to all tests
-  const rootDir = './__tests__/sampledb';
+  const rootDir = './__tests__/store';
     
   //beforeEach stuff
   beforeEach(() => {
@@ -21,12 +22,21 @@ describe('SimpleDB', () => {
       role: 'grandma'
     };
 
-    const dirContents = readdir(rootDir);
+    const fileAfter = {
+      id: expect.any(String),
+      name: 'gloria',
+      role: 'grandma'
+    };
+
+    // const dirContents = readdir(rootDir);
 
 
     return db1
       .save(fileBefore)
-      .then(() => expect(dirContents).toBeTruthy());
+      .then(() => db1.get(fileBefore.id))
+    //   .then((id) => get(id))
+      .then((receivedFile) => expect(receivedFile).toEqual(fileAfter));
+    //   .then(() => expect(dirContents).toBeTruthy());
   });
   //save and get test
 
