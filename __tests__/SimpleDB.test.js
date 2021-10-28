@@ -1,6 +1,5 @@
 //imports 
 const { mkdir, rm } = require('fs/promises');
-// const { get } = require('http');
 const SimpleDB = require('../SimpleDB.js');
 
 describe('SimpleDB', () => {
@@ -14,8 +13,8 @@ describe('SimpleDB', () => {
   }
 
   );
-  //save test
-  it('should save a file in rootDir', () => {
+  //save and get test
+  it('should save a file with an id', () => {
     const db1 = new SimpleDB(rootDir);
     const fileBefore = {
       name: 'gloria',
@@ -30,18 +29,19 @@ describe('SimpleDB', () => {
 
     // const dirContents = readdir(rootDir);
 
-
     return db1
       .save(fileBefore)
       .then(() => db1.get(fileBefore.id))
-    //   .then((id) => get(id))
       .then((receivedFile) => expect(receivedFile).toEqual(fileAfter));
-    //   .then(() => expect(dirContents).toBeTruthy());
   });
-  //save and get test
 
   //null test
-
+  it('should return null if there is no file', () => {
+    const db2 = new SimpleDB(rootDir);
+    return db2
+      .get('fakeid')
+      .then((result) => expect(result).toEqual(null));
+  });
   //get all test
 
   //delete test
